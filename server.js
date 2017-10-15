@@ -6,26 +6,13 @@ var exphbs = require('express-handlebars');
 var passport = require('passport');
 var timeout = require('connect-timeout');
 var compression = require('compression');
-
-//var authorize = require('./core/middleware/authorize');
 var settings = require('./core/settings');
-//var client = 'angular';
 var client = {
     dist: path.join(__dirname, 'webapp', 'dist'),
     index: path.join(__dirname, 'webapp/dist', 'index.html')
 };
-var clients = {
-    'react': {
-        dist: path.join(__dirname, 'client-react', 'build'),
-        index: path.join(__dirname, 'client-react/build', 'index.html')
-    },
-    'angular': {
-        dist: path.join(__dirname, 'client-angular', 'dist'),
-        index: path.join(__dirname, 'client-angular/dist', 'index.html')
-    }
-};
-//var index = require('./routes/index');
 var api = require('./api/routes');
+var authorize = require('./core/middleware/authorize');
 
 var debug = require('debug')('server');
 var http = require('http');
@@ -34,11 +21,25 @@ var http = require('http');
 var app = express();
 
 initViewEngine();
-
+initSessionMiddleware();
 initErrorHandlers();
 initServer();
 initRoutes();
 initProcessExceptionHandler();
+
+
+function initSessionMiddleware() {
+    require('./core/passport')(passport);
+
+    // required for passport
+    app.use(session({
+        secret: 'my session thg',  // session secret
+        resave: true,
+        saveUninitialized: true
+    }));
+    app.use(passport.initialize());
+    app.use(passport.session()); // persistent login sessions
+}
 
 function initViewEngine() {
     app.engine('html', exphbs({}));
@@ -60,9 +61,13 @@ function initServer() {
     app.use(express.static(client.dist));
 
     app.listen(settings.server.PORT);
+    console.info('App is available on http://localhost:'+settings.server.PORT);
 }
 
 function initRoutes() {
+    app.use('/api', authorize(), api);
+    app.use('/login', api);
+
     app.all('/*', function (req, res) {
         res.sendFile(client.index);
     });

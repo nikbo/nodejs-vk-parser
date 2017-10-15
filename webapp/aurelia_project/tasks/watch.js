@@ -8,6 +8,8 @@ import transpile from './transpile';
 import processMarkup from './process-markup';
 import processCSS from './process-css';
 import copyFiles from './copy-files';
+import copyAppBundles from './copy-app-bundle';
+import copyIndex from './copy-index';
 
 const debounceWaitTime = 100;
 let isBuilding = false;
@@ -74,6 +76,8 @@ let refresh = debounce(() => {
     (done) => {
       isBuilding = false;
       watchCallback();
+      copyAppBundles();
+      copyIndex();
       done();
       if (pendingRefreshPaths.length > 0) {
         log('Watcher: Found more pending changes after finishing build, triggering next one...');

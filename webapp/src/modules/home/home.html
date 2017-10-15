@@ -1,0 +1,7 @@
+<template>
+  <input show.bind="!user" type="button" value="Login VK" click.delegate="login()">
+  <div show.bind="user">
+    <img src.bind="user.photo">
+    ${user.first_name} ${user.last_name}
+  </div>
+</template>

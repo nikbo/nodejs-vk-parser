@@ -114,6 +114,8 @@
           "aurelia-templating",
           "aurelia-templating-binding",
           "text",
+          "aurelia-fetch-client",
+          "aurelia-http-client",
           {
             "name": "aurelia-templating-resources",
             "path": "../node_modules/aurelia-templating-resources/dist/amd",

@@ -1,5 +1,24 @@
+import RouterConfig from 'configuration/router.config';
+
 export class App {
-  constructor() {
-    this.message = 'Hello World from Aurelia!';
+
+  /*configureRouter(config) {
+    config.options.pushState = true;
+    config.options.root = '/';
+  }*/
+
+  static inject() {
+    return [RouterConfig];
   }
+  constructor(
+    /* Service */ routerConfig
+  ) {
+    this.routerConfig = routerConfig;
+  }
+
+  activate() {
+    this.routerConfig.configure();
+  }
+
+
 }

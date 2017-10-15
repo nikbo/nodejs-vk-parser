@@ -29,6 +29,13 @@ var server = {
     PORT: normalizePort(process.env.PORT || '3000')
 };
 
+var login = {
+    vk: {
+        secret: getEnvVar('vkSecret'),
+        appId: getEnvVar('vkAppId')
+    }
+};
+
 var client = {
     server: server.SERVER,
     environment: server.environment
@@ -36,5 +43,6 @@ var client = {
 
 module.exports = {
     server: server,
-    client: client
+    client: client,
+    login: login
 };

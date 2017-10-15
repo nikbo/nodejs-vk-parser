@@ -3,7 +3,8 @@ import environment from './environment';
 export function configure(aurelia) {
   aurelia.use
     .standardConfiguration()
-    .feature('resources');
+    .feature('resources')
+    .developmentLogging();
 
   if (environment.debug) {
     aurelia.use.developmentLogging();
